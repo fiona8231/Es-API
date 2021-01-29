@@ -12,15 +12,19 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.Highlighter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,14 +75,42 @@ public class EsService {
         searchSourceBuilder.query(title);
         searchSourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
 
+
+        //高亮效果
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        highlightBuilder.field("title");
+        highlightBuilder.requireFieldMatch(false);
+        highlightBuilder.preTags("<span style='color:red'>");
+        highlightBuilder.postTags("</span>");
+        searchSourceBuilder.highlighter(highlightBuilder);
+
         //执行搜索
         jing_dongRequest.source(searchSourceBuilder);
         SearchResponse searchResponse = restHighLevelClient.search(jing_dongRequest, RequestOptions.DEFAULT);
 
+
         //解析数据
         ArrayList<Map<String, Object>> jsonList = new ArrayList<>();
+
+        //结果要封装成高亮
         for (SearchHit hit : searchResponse.getHits()) {
-            Map<String, Object> map = hit.getSourceAsMap();//再把map返回去
+
+            //获取高亮的字段
+            Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+            HighlightField t= highlightFields.get("title");
+
+            Map<String, Object> map = hit.getSourceAsMap();
+            //如果高亮字段存在，替换一下原来的字符串
+            if(t != null){
+                Text[] texts = t.getFragments();//convert to text
+                StringBuilder new_title = new StringBuilder();
+                for (Text text : texts) {
+                    new_title.append(text);
+                }
+                //再把高亮字段返回去map
+                map.put("title", new_title.toString());
+            }
+
             jsonList.add(map);
         }
         return jsonList;

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8"/>
-    <title>狂神说Java-ES仿京东实战</title>
+    <title>喵仔-ES摸鱼商城</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <script th:src="@{/js/jquery.min.js}"></script>
 </head>
@@ -27,7 +27,7 @@
                         <div id="mallSearch" class="mall-search">
                             <form name="searchTop" class="mallSearch-form clearfix">
                                 <fieldset>
-                                    <legend>天猫搜索</legend>
+                                    <legend>啊猫搜索</legend>
                                     <div class="mallSearch-input clearfix">
                                         <div class="s-combobox" id="s-combobox-685">
                                             <div class="s-combobox-input-wrap">
@@ -40,11 +40,11 @@
                                 </fieldset>
                             </form>
                             <ul class="relKeyTop">
-                                <li><a>狂神说Java</a></li>
-                                <li><a>狂神说前端</a></li>
-                                <li><a>狂神说Linux</a></li>
-                                <li><a>狂神说大数据</a></li>
-                                <li><a>狂神聊理财</a></li>
+                                <li><a>橘猫</a></li>
+                                <li><a>可爱喵</a></li>
+                                <li><a>大花喵</a></li>
+                                <li><a>小灰喵</a></li>
+                                <li><a>大白喵</a></li>
                             </ul>
                         </div>
                     </div>
@@ -100,11 +100,11 @@
                             </p>
                             <!--标题-->
                             <p class="productTitle">
-                                <a> {{item.title}}} </a>
+                                <a v-html="item.title"></a>
                             </p>
                             <!-- 店铺名 -->
                             <div class="productShop">
-                                <span>店铺： 狂神说Java </span>
+                                <span>店铺： 喵仔专卖店 </span>
                             </div>
                             <!-- 成交信息 -->
                             <p class="productStatus">
@@ -122,9 +122,9 @@
 <!--vue 私用-->
 <script th:src="@{/js/axios.min.js}"></script>
 <script th:src="@{/js/vue.min.js}"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
 
 <script>
     new Vue({
